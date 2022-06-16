@@ -79,9 +79,8 @@ class Interpreter:
             start = line.index(var)
 
             if line[start - 1] == "$":
-                print("iv")
                 line.replace(line[start - 1: start + len(var)],
-                             str(self.variables.get(var)))
+                             str(self.variables.get(line[start - 1: start + len(var)])))
 
         return line
 
