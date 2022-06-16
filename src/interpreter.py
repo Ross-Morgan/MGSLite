@@ -22,8 +22,6 @@ class Interpreter:
         if is_line:
             source = [source]
 
-        print(f"{source=}")
-
         for line in source:
             if line.strip() == "":
                 continue
@@ -36,7 +34,7 @@ class Interpreter:
 
             self.variables[var] = func(list(map(float, args)))
 
-        self.replace_inline_variables(line)
+        line = self.replace_inline_variables(line)
 
         # Nothing to interpret
         return " ".join(source)
@@ -75,18 +73,15 @@ class Interpreter:
         return args
 
     def replace_inline_variables(self, line: str) -> str:
-        inline_vars = patterns["inline_variables"].search(line)
+        inline_vars = patterns["inline_variables"].findall(line)
 
-        line = "".join([" ", line])
-
-        for var in inline_vars.groups():
-            print(var)
+        for var in inline_vars:
             start = line.index(var)
 
             if line[start - 1] == "$":
-                print(line[start - 1: start + len(var)])
+                print("iv")
                 line.replace(line[start - 1: start + len(var)],
-                             self.variables.get(var))
+                             str(self.variables.get(var)))
 
         return line
 
@@ -94,8 +89,6 @@ class Interpreter:
 def main():
     interpreter = Interpreter("script.mgsl")
     interpreter.interpret()
-
-    print(f"{interpreter.variables=}")
 
 
 if __name__ == "__main__":
